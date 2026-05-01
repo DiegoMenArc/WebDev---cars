@@ -1,5 +1,6 @@
 package br.com.carstore.service;
 
+import br.com.carstore.dao.CarDao;
 import br.com.carstore.dto.CarDTO;
 import org.springframework.stereotype.Service;
 
@@ -10,28 +11,28 @@ import java.util.UUID;
 @Service
 public class CarServiceImpl implements CarService {
 
-    private final List<CarDTO> cars;
+    private CarDao dao;
 
-    public CarServiceImpl() {
-        cars = new ArrayList<CarDTO>();
+    public CarServiceImpl(CarDao dao){
+        this.dao = dao ;
     }
 
     public List<CarDTO> findAll() {
-        return this.cars;
+        return this.dao.findAll();
     }
 
     public void save(CarDTO carDTO) {
         if (carDTO.getId() == null){
             carDTO.setId(UUID.randomUUID().toString());
         }
-        this.cars.add(carDTO);
+        this.dao.save(carDTO);
     }
 
     public void deleteById(String id) {
-        this.cars.removeIf(car -> car.getId().equals(id));
+        this.dao.deleteById(id);
     }
 
     public void update(String id, CarDTO carDTO) {
-        this.cars.replaceAll(car -> car.getId().equals(id) ? carDTO : car);
+        this.dao.update(id, carDTO);
     }
 }
